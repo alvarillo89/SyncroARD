@@ -108,6 +108,55 @@ Según estos dos criterios, el claro ganador es `FreeRTOS`, que será el microke
 - Raspberry Pi (https://www.raspberrypi.org/)
 - Zybo Zynq (https://store.digilentinc.com/zybo-zynq-7000-arm-fpga-soc-trainer-board/)
 
+---
+
+## 2.1 Raspberry Pi
+
+Posiblemente, el ordenador de placa reducida y bajo costo más popular del mundo de la electrónica y la informática. Su objetivo inicial fue fomentar la enseñanza de la informática en las escuelas, aunque se ha aplicado en muchos más campos fuera de se su mercado objetivo, como por ejemplo la robótica. Su primer lanzamiento fue el 29 de Febrero de 2012 y el último modelo, la Raspberry Pi 4 B, fue anunciado en junio de 2019.
+
+ Incluye un procesador Broadcom, memoria RAM, GPU, puertos USB, HDMI, Ethernet, 40 pines GPIO y un conector para cámara. Ninguna de sus ediciones incluye memoria, siendo esta en su primera versión una tarjeta SD y en ediciones posteriores una tarjeta MicroSD.
+
+ En [este enlace](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/specifications/) se pueden consultar las especificaciones del último modelo.
+
+ **Pros:**
+ - Barata.
+ - Fácilmente configurable.
+ - Amplia documentación.
+ - Miles de tutoriales y referencias en la web.
+ - Utilizada para sistemas empotrados.
+
+ **Contras:**
+ - No dispone de un reloj de tiempo real.
+ - No es aconsejable para sistemas de tiempo real.
+ - FreeRTOS no dispone de un port oficial. Aunque sí de un [port hecho por terceros](https://github.com/jameswalmsley/RaspberryPi-FreeRTOS)  muy básico.
+
+--- 
+
+### 2.2 Zybo Zynq
+
+Se trata de una plataforma de desarrollo de circuitos digitales y software empotrado de nivel básico, rica en funciones y lista para usar, construida alrededor del miembro más pequeño de la familia Xilinx Zynq-7000, el Z-7010. Este procesador se basa en la arquitectura Xilinx All Programmable System-on-Chip (AP SoC), que integra estrechamente un procesador ARM Cortex-A9 de doble núcleo con la *Field Programmable Gate Array* (FPGA) Xilinx serie 7.
+
+Incluye memorias integradas, E/S de video y audio, USB de doble función, Ethernet y una ranura SD. Además, incorpora seis conectores Pmod.
+
+En el [siguiente enlace](https://store.digilentinc.com/zybo-zynq-7000-arm-fpga-soc-trainer-board/) se incluyen las características.
+
+**Pros:**
+- Específica para sistemas empotrados.
+- Incluye un [port oficial](https://www.freertos.org/a00090.html#XILINX) de FreeRTOS.
+- Es útil para sistemas de tiempo real.
+
+**Contras:**
+- Más cara.
+- El modelo está descontinuado.
+- No tiene tanta comunidad.
+
+---
+
+### 2.3 Conclusión
+
+En este caso la decisión es sencilla, la Raspberry Pi no es apropiada para sistemas de tiempo real, la versión de FreeRTOS no es oficial y tampoco incluye todas las características.
+
+En definitiva, para las pruebas de este proyecto se utilizará el dispositivo `Zybo Zynq`.
 
 ---
 ## 3. Referencias
@@ -117,3 +166,5 @@ Según estos dos criterios, el claro ganador es `FreeRTOS`, que será el microke
 - https://lists.rtems.org/pipermail/users/2004-September/010702.html
 - http://www.microkernel.info/
 - https://www.silabs.com/about-us/legal/micrium-software-evaluation-license
+- https://www.raspberrypi.org/forums/viewtopic.php?t=199307
+- https://www.socallinuxexpo.org/sites/default/files/presentations/Steven_Doran_SCALE_13x.pdf
