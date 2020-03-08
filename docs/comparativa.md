@@ -6,7 +6,7 @@ Para que la biblioteca funcione apropiadamente, debe tener por debajo una capa q
 
 > Un microkernel, es un tipo de kernel de un sistema operativo que provee un conjunto de primitivas o llamadas mínimas al sistema para implementar servicios básicos como espacios de direcciones, comunicación entre procesos y planificación básica.
 
-De entre todos los microkernels existenes para tiempo real, se han tomado en consideración los siguientes:
+De entre todos los microkernels existentes para tiempo real, se han tomado en consideración los siguientes:
 
 - `FreeRTOS` (https://www.freertos.org/)
 - `µC/OS` (https://www.micrium.com/rtos/kernels/)
@@ -25,7 +25,7 @@ Está específicamente diseñado para funcionar con pequeños microprocesadores 
 - Ligero (con un footprint de tan solo 9KB).
 - Modo de ahorro de energía para ciertas arquitecturas.
 - Soporte para más de 40 arquitecturas.
-- Biblotecas modulares.
+- Bibliotecas modulares.
 - Incluye conectividad en la nube e integraciones de referencia para IoT.
 
 ---
