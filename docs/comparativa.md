@@ -93,19 +93,19 @@ Se trata de un microkernel experimental utilizado para construir sistemas empotr
 
 ### 1.6 Conclusión
 
-Evaluando las diferentes alternativas, parece ser que la que más destaca por sus características es `µC/OS`. No obstante, no se trata de una comparativa justa. Este es el unico kernel "comercial" que se muestra en la tabla y, posiblemente, si se tuviésen en cuenta las licencias comerciales de los otros kernels, no habría tanta diferencia. Además, dada la naturaleza de código abierto de `SyncroC`, usar un software privativo no es aceptable. 
+Evaluando las diferentes alternativas, parece ser que la que más destaca por sus características es `µC/OS`. No obstante, no se trata de una comparativa justa. Este es el unico kernel "comercial" que se muestra en la tabla y, posiblemente, si se tuviésen en cuenta las licencias comerciales de los otros kernels, no habría tanta diferencia. Además, dada la naturaleza de código abierto de `SyncroARD`, usar un software privativo no es aceptable. 
 
 Dentro de los kernels open source, podemos descartar `F9-kernel`. Este está aún en un desarrollo y las releases existentes son experimentales. Además, todavía no se ha evaluado su confiabilidad (*reliability*).
 
 Esto nos deja con dos opciones: `FreeRTOS` o `RTEMS`, los dos kernels de tiempo real de código abierto por excelencia. Ambos proporcionan más o menos las mismas características, son compatibles con múltiples arquitecturas y están orientados a dispositivos empotrados. Para decidir, se tendrán en cuenta únicamente la popularidad del mismo y el estado de la documentación.
 
-Según estos dos criterios, el claro ganador es `FreeRTOS`, que será el microkernel que se empleará para el desarrollo de `SyncroC`.
+Según estos dos criterios, el claro ganador es `FreeRTOS`, que será el microkernel que se empleará para el desarrollo de `SyncroARD`.
 
 ---
 
 ## 2. Dispositivos
 
-`FreeRTOS` y `SyncroC` deben instalarse sobre alguna tarjeta (además de que `FreeRTOS` es muy dependiente del dispositivo). Durante el desarrollo, debemos decantarnos por utilizar un dispositivo concreto. Se han tomado en cuenta las siguientes alternativas:
+`FreeRTOS` y `SyncroARD` deben instalarse sobre alguna tarjeta (además de que `FreeRTOS` es muy dependiente del dispositivo). Durante el desarrollo, debemos decantarnos por utilizar un dispositivo concreto. Se han tomado en cuenta las siguientes alternativas:
 
 - Raspberry Pi (https://www.raspberrypi.org/)
 - Zybo Zynq (https://store.digilentinc.com/zybo-zynq-7000-arm-fpga-soc-trainer-board/)
@@ -192,7 +192,7 @@ Del estudio anterior, pueden extraerse los siguientes puntos:
     - Con respecto al inconveniente de la memoria, se han realizado pruebas para comprobar cuánto espacio consume FreeRTOS de los 32KB disponibles. El microkernel solo consume un 20% del espacio, quedando libre un 80% para el resto de código necesario.
     - Utilizando el bus [I2C](https://www.luisllamas.es/arduino-i2c/) resulta sencillo conectar dos tarjetas Arduino y compartir información entre ambas.
 
-En definitiva, para el desarrollo de este proyecto, se utilizará como dispositivo la placa `Arduino Uno R3`. En el directorio [demos/](https://github.com/alvarillo89/SyncroC/tree/master/demos) puede consultar todos los sketches de Arduino empleados para verificar la viabilidad de esta decisión. 
+En definitiva, para el desarrollo de este proyecto, se utilizará como dispositivo la placa `Arduino Uno R3`. En el directorio [demos/](https://github.com/alvarillo89/SyncroARD/tree/master/demos) puede consultar todos los sketches de Arduino empleados para verificar la viabilidad de esta decisión. 
 
 ---
 ## 3. Referencias
