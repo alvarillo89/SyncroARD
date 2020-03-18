@@ -1,5 +1,7 @@
 # Comparativa de microkernels y dispositivos
 
+En este documento encontrará información acerca de por qué se decidió utilizar FreeRTOS y por qué se escogió Arduino como plataforma objetivo para el desarrollo de este proyecto.
+
 ## 1. Microkernels
 
 Para que la biblioteca funcione apropiadamente, debe tener por debajo una capa que proporcione utilidades de tiempo real. Puesto que los dispositivos con los que se trabajará serán empotrados y no realizarán más de una o dos tareas, tenemos suficiente con un microkernel.
@@ -103,14 +105,15 @@ Según estos dos criterios, el claro ganador es `FreeRTOS`, que será el microke
 
 ## 2. Dispositivos
 
-`FreeRTOS` y `SyncroC` deben instalarse sobre alguna tarjeta. Para las pruebas realizadas durante el desarrollo, debemos descantarnos por utilizar un dispositivo concreto. Se han tomado en cuenta las siguientes alternativas:
+`FreeRTOS` y `SyncroC` deben instalarse sobre alguna tarjeta (además de que `FreeRTOS` es muy dependiente del dispositivo). Durante el desarrollo, debemos decantarnos por utilizar un dispositivo concreto. Se han tomado en cuenta las siguientes alternativas:
 
 - Raspberry Pi (https://www.raspberrypi.org/)
 - Zybo Zynq (https://store.digilentinc.com/zybo-zynq-7000-arm-fpga-soc-trainer-board/)
+- Arduino (https://www.arduino.cc/)
 
 ---
 
-## 2.1 Raspberry Pi
+### 2.1 Raspberry Pi
 
 Posiblemente, el ordenador de placa reducida y bajo costo más popular del mundo de la electrónica y la informática. Su objetivo inicial fue fomentar la enseñanza de la informática en las escuelas, aunque se ha aplicado en muchos más campos fuera de se su mercado objetivo, como por ejemplo la robótica. Su primer lanzamiento fue el 29 de Febrero de 2012 y el último modelo, la Raspberry Pi 4 B, fue anunciado en junio de 2019.
 
@@ -148,15 +151,48 @@ En el [siguiente enlace](https://store.digilentinc.com/zybo-zynq-7000-arm-fpga-s
 **Contras:**
 - Más cara.
 - El modelo está descontinuado.
-- No tiene tanta comunidad.
+- Documentación prácticamente nula.
+- Es imposible encontrar comunidad que haya trabajado con ella.
+- Cargar una imagen en la tarjeta es bastante complejo.
 
 ---
 
-### 2.3 Conclusión
+### 2.3 Arduino
 
-En este caso la decisión es sencilla, la Raspberry Pi no es apropiada para sistemas de tiempo real, la versión de FreeRTOS no es oficial y tampoco incluye todas las características.
+Arduino es una compañía de desarrollo de software y hardware libres, así como una comunidad internacional que diseña y manufactura placas de desarrollo de hardware para construir dispositivos digitales y dispositivos interactivos que puedan detectar y controlar objetos del mundo real. Arduino se enfoca en acercar y facilitar el uso de la electrónica y programación de sistemas embebidos en proyectos multidisciplinarios. Los diseños de las placas Arduino usan diversos microcontroladores y microprocesadores. Generalmente el hardware consiste de un microcontrolador Atmel AVR, conectado bajo la configuración de "sistema mínimo" sobre una placa de circuito impreso a la que se le pueden conectar placas de expansión (shields) a través de la disposición de los puertos de entrada y salida presentes en la placa seleccionada.
 
-En definitiva, para las pruebas de este proyecto se utilizará el dispositivo `Zybo Zynq`.
+Arduino presenta una gran variedad de modelos de placas. Para esta comparativa, nos centraremos en el modelo [Arduino Uno R3](https://www.infootec.net/arduino/). Incluye un procesador `ATmega328P` con 35KB de memoria flash y 14 pines digitales de entrada y salida.
+
+Además, existen placas con las mismas especificaciones pero de otras marcas, haciéndolas mucho más económicas de lo que ya es de por sí Arduino (como por ejemplo, las placas de `ELEGOO`).
+
+**Pros:**
+- Muy ecónomica.
+- Amplia comunidad y soporte.
+- Miles de tutoriales y referencias en la web.
+- Es sencillo comunicar dos tarjetas entre sí.
+- El proceso de cargar una imagen en la tarjeta es extremadamente sencillo.
+
+**Contras:**
+- No existe un port oficial de FreeRTOS para Arduino. No obstante, sí que existe una [bibloteca de Arduino de FreeRTOS](https://github.com/feilipu/Arduino_FreeRTOS_Library) hecha por terceros.
+- Escasa memoria.
+
+---
+
+### 2.4 Conclusión
+
+Del estudio anterior, pueden extraerse los siguientes puntos:
+
+- La `Raspberry Pi` no es apropiada para sistemas de tiempo real. La versión de FreeRTOS no es oficial y además no incluye todas las características del microkernel. No parece la mejor decisión para un proyecto de este tipo. 
+- La `Zybo Zynq` resulta demasiado compleja de utilizar, en gran parte, debido a la descontinuación del modelo por parte de los fabricantes y a la falta de referencias y comunidad tras ella. Es cierto que es la única de esta lista con un port oficial de FreeRTOS, pero su uso ralentizará enormemente el desarrollo.
+- Las ventajas de `Arduino` con respecto al resto son bastante claras:
+    - Tiene tanta comunidad como la Raspberry Pi.
+    - A diferencia de la Raspberry Pi, Arduino si que incorpora un reloj que puede ser utilizado para el `system_tick` de FreeRTOS (un watchdog timer).
+    - Aunque el port de Arduino tampoco es oficial, este si que incorpora todas las funcionalidades originales de FreeRTOS.
+    - Programar el Arudino es infinitamente más sencillo que programar la Zybo.
+    - Con respecto al inconveniente de la memoria, se han realizado pruebas para comprobar cuánto espacio consume FreeRTOS de los 32KB disponibles. El microkernel solo consume un 20% del espacio, quedando libre un 80% para el resto de código necesario.
+    - Utilizando el bus [I2C](https://www.luisllamas.es/arduino-i2c/) resulta sencillo conectar dos tarjetas Arduino y compartir información entre ambas.
+
+En definitiva, para el desarrollo de este proyecto, se utilizará como dispositivo la placa `Arduino Uno R3`. En el directorio [demos/](https://github.com/alvarillo89/SyncroC/tree/master/demos) puede consultar todos los sketches de Arduino empleados para verificar la viabilidad de esta decisión. 
 
 ---
 ## 3. Referencias
@@ -168,3 +204,6 @@ En definitiva, para las pruebas de este proyecto se utilizará el dispositivo `Z
 - https://www.silabs.com/about-us/legal/micrium-software-evaluation-license
 - https://www.raspberrypi.org/forums/viewtopic.php?t=199307
 - https://www.socallinuxexpo.org/sites/default/files/presentations/Steven_Doran_SCALE_13x.pdf
+- https://www.arduino.cc/en/Tutorial/MasterWriter
+- https://github.com/feilipu/Arduino_FreeRTOS_Library
+- https://feilipu.me/2015/11/24/arduino_freertos/
