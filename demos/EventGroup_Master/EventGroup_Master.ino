@@ -9,6 +9,9 @@ EventGroupHandle_t xEventBits;
 #define TASK_1_BIT  ( 1 << 1 )
 #define ALL_SYNC_BITS ( TASK_0_BIT | TASK_1_BIT )
 
+int tickStart;
+int tickEnd;
+int lastDeltaTick;
 
 // RTOS tasks:
 void Notify( void *pvParameters );
@@ -16,11 +19,12 @@ void BlinkLed( void *pvParameters );
 
 
 void setup() {
-  Wire.begin();
+  Serial.begin(9600);
+  Wire.begin(5);
   xEventBits = xEventGroupCreate();
 
   if( xEventBits != NULL ) {
-    xTaskCreate(Notify, "Notify", 128, NULL, 1, NULL); // More priority
+    xTaskCreate(Notify, "Notify", 128, NULL, 1, NULL);
     xTaskCreate(BlinkLed, "BlinkLed", 128, NULL, 1, NULL);
   }
 }
@@ -34,8 +38,7 @@ void Notify( void *pvParameters ) {
   Wire.beginTransmission(4);
   Wire.write(1);              
   Wire.endTransmission();
-
-  for(;;) { vTaskDelay(10000 / portTICK_PERIOD_MS); }
+  vTaskSuspend( NULL );
 }
 
 
@@ -44,12 +47,18 @@ void BlinkLed( void *pvParameters ) {
   pinMode(LED_BUILTIN, OUTPUT);
 
   xEventGroupSync( xEventBits, TASK_1_BIT, ALL_SYNC_BITS, portMAX_DELAY );
-  // vTaskDelay( 6000 / portTICK_PERIOD_MS );
 
   for(;;) {
+    tickStart = xTaskGetTickCount();
     digitalWrite(LED_BUILTIN, HIGH);
-    vTaskDelay( 1000 / portTICK_PERIOD_MS );
+    delay(1000);
     digitalWrite(LED_BUILTIN, LOW);
-    vTaskDelay( 1000 / portTICK_PERIOD_MS );
-  }
+    delay(1000);
+    tickEnd = xTaskGetTickCount();
+    lastDeltaTick = tickEnd - tickStart;
+
+    Wire.requestFrom(4, 1);    // request 6 bytes from slave device #2
+    int c = Wire.read(); // receive a byte as character
+    Serial.println(c);
+  }  
 }
