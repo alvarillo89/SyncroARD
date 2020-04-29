@@ -1,0 +1,9 @@
+SyncroM		KEYWORD1
+SyncroS		KEYWORD1
+notifyI2C	KEYWORD2
+notifyGPIO	KEYWORD2
+syncTask	KEYWORD2
+attachTask	KEYWORD2
+receiveI2C	KEYWORD2
+receiveGPIO	KEYWORD2
+doSyncTask	KEYWORD2

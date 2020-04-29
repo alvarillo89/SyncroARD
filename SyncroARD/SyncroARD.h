@@ -18,7 +18,7 @@ class SyncroM {
     public:
         static void begin();
         static void notifyI2C();
-        //static void notifyGPIO();
+        static void notifyGPIO();
         static void syncTask();
     private:
         static const byte _outPin = 2;
@@ -26,18 +26,22 @@ class SyncroM {
 };
 
 
+typedef void (*void_f)();
+typedef void (*int_f)(int);
+
 class SyncroS {
     public:
-        static void begin(void(*I2CIrs)(int), void(*GPIOIsr)(void));
-        static void attachTask(void (*task)(void));
+        static void begin(int_f i2cIsr, void_f gpioIsr);
+        static void attachTask(void_f task);
         static void receiveI2C();
-        //static void receiveGPIO();
+        static void receiveGPIO();
         static void doSyncTask();
     private:
-        const byte _inPin = 2;
-        byte _flagI2C;
-        //byte _flagGPIO;
-        //byte _startupPulse;
+        static const byte _inPin = 2;
+        static volatile byte _flagI2C;
+        static volatile byte _flagGPIO;
+        static volatile byte _startupPulse;
+        static void_f _task;
 };
 
 #endif
