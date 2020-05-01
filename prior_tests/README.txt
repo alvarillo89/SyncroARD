@@ -7,7 +7,7 @@ Incluye:
   - I2C_[Master/Slave].ino: una prueba de comunicación entre dos tarjetas Arduino 
     utilizando I2C y el patrón maestro-esclavo.
   - GPIO_[Master/Slave].ino: una prueba de comunicación entre dos tarjetas Arduino 
-    utilizando un pin de entrada de propósito general y el patrón maestro-esclavo.
+    utilizando un pin de entrada/salida de propósito general y el patrón maestro-esclavo.
   - EventGroup_test.ino: una prueba de sincronizar varias tareas de FreeRTOS (en una
     misma tarjeta) utilizando la barrera presente en el complemento de FreeRTOS Event Group.
   - Sync_[Master/Slave].ino: una prueba del código que realizará la biblioteca para la
