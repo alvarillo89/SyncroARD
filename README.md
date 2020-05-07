@@ -3,9 +3,10 @@
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 
 # SyncroARD
+
 ###### Proyecto desarrollado para la asignatura Sistemas Críticos del Máster en Ingeniería Informática (UGR).
 
-SyncroARD constituye una biblioteca de Arduino escrita en C++ para sincronizar cualquier tipo de tarea en un sistema de dos tarjetas distribuidas. Proporciona una API de alto nivel para permitir que una tarea definida se ejecute exactamente al mismo tiempo en ambos dispositivos, a la vez que garantiza la confiabilidad (*reliability*) del sistema.
+SyncroARD constituye una biblioteca de Arduino escrita en C++ para sincronizar cualquier tipo de tarea en un sistema de dos tarjetas distribuidas. Proporciona una API de alto nivel para permitir que una tarea definida se ejecute exactamente al mismo tiempo en ambos dispositivos, a la vez que garantiza la confiabilidad (_reliability_) del sistema.
 
 SyncroARD está construida sobre [**FreeRTOS**](https://www.freertos.org/), más concretamente, utiliza por debajo la biblioteca [Arduino_FreeRTOS_Library](https://github.com/feilipu/Arduino_FreeRTOS_Library). Para más información sobre cómo se tomó esta decisión, consulte el [siguiente enlace](https://alvarillo89.github.io/SyncroARD/docs/comparativa).
 
@@ -23,14 +24,20 @@ Sigue estos pasos si quieres utilizar SyncroARD:
 
 1. Asegúrate de tener instalada la biblioteca de Arduino _"Arduino FreeRTOS Library"_. Sigue los pasos del punto _Getting Started with FreeRTOS_ del [siguiente enlace](https://feilipu.me/2015/11/24/arduino_freertos/) para instalarla.
 2. Clona o descarga este repositorio y coloca el directorio [**SyncroARD/**](https://github.com/alvarillo89/SyncroARD/tree/master/SyncroARD) bajo la ruta en la que se alojen las bibliotecas de Arduino en tu sistema. En Linux por ejemplo, deberás colocarla bajo el directorio `~/Arduino/libraries/`. Puedes consultar más información sobre como instalar una biblioteca manualmente en el [siguiente enlace](https://www.arduino.cc/en/Guide/Libraries#toc5).
-3. Conecta ambas tarjetas de la [**siguiente forma**](https://github.com/alvarillo89/SyncroARD/blob/master/examples/README.md).
-3. Para hacer tu código, parte de las plantillas para el Maestro y el Esclavo presentes en el directorio [**templates/**](https://github.com/alvarillo89/SyncroARD/tree/master/templates).
+3. Conecta ambas tarjetas de la siguiente forma:
+   ![](docs/imgs/Connection.png)
+
+   - La conexión a tierra (GND) entre ambas tarjetas es obligatoria.
+   - La conexión entre los pines digitales número 2 son para la comunicación mediante GPIO.
+   - La conexión entre los pines analógicos 4 y 5 son para el bus I2C.
+
+4. Para hacer tu código, parte de las plantillas para el Maestro y el Esclavo presentes en el directorio [**templates/**](https://github.com/alvarillo89/SyncroARD/tree/master/templates).
 
 ### Master.ino
 
 ```cpp
 /*
-    Master.ino: synchronization template for the 
+    Master.ino: synchronization template for the
     master card.
     Created by Álvaro Fernández G., March 2020.
     Released under GPLv3 license.
@@ -65,7 +72,7 @@ void setup() {
 void loop() { delay(10000); }
 
 
-// This code block carries out communication via I2C. 
+// This code block carries out communication via I2C.
 // If you don't want to use it, you can delete it.
 // Keep both functions (I2C, GPIO) if you want to have redundancy
 void I2C( void *pvParameters ) {
@@ -74,7 +81,7 @@ void I2C( void *pvParameters ) {
 }
 
 
-// This code block carries out communication via GPIO. 
+// This code block carries out communication via GPIO.
 // If you don't want to use it, you can delete it.
 // Keep both functions (I2C, GPIO) if you want to have redundancy
 void GPIO( void *pvParameters ) {
@@ -94,7 +101,7 @@ void Task( void *pvParameters ) {
         * ...
         * ...
     */
-  }  
+  }
 }
 ```
 
@@ -102,7 +109,7 @@ void Task( void *pvParameters ) {
 
 ```cpp
 /*
-    Slave.ino: synchronization template for the 
+    Slave.ino: synchronization template for the
     slave card.
     Created by Álvaro Fernández G., March 2020.
     Released under GPLv3 license.
@@ -114,11 +121,11 @@ void Task( void *pvParameters ) {
 
 void setup() {
   // Init library. Use SyncroS class for slave.
-  // It receives the functions that manage the interruption 
-  // of I2C and GPIO respectively. If you don't want to use 
+  // It receives the functions that manage the interruption
+  // of I2C and GPIO respectively. If you don't want to use
   // any of them, pass NULL as parameter
   SyncroS::begin(I2C, GPIO);
-  // Tell the library the function of your task. It must 
+  // Tell the library the function of your task. It must
   // return void and not take arguments
   SyncroS::attachTask(Task);
   /*
@@ -129,14 +136,14 @@ void setup() {
 }
 
 
-// Keep the main loop like this. This will call your linked task 
+// Keep the main loop like this. This will call your linked task
 // at the right time
 void loop() {
   SyncroS::doSyncTask();
 }
 
 
-// This code block carries out communication via I2C. 
+// This code block carries out communication via I2C.
 // If you don't want to use it, you can delete it.
 // Keep both functions (I2C, GPIO) if you want to have redundancy
 void I2C(int howMany) {
@@ -144,7 +151,7 @@ void I2C(int howMany) {
 }
 
 
-// This code block carries out communication via GPIO. 
+// This code block carries out communication via GPIO.
 // If you don't want to use it, you can delete it.
 // Keep both functions (I2C, GPIO) if you want to have redundancy
 void GPIO() {
