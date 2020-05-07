@@ -16,6 +16,8 @@ SyncroARD está construida sobre [**FreeRTOS**](https://www.freertos.org/), más
 
 Por el momento, SyncroARD solo permite sincronizar una única tarea en dos tarjetas, donde una asumirá el rol de Maestro y la otra, de Esclavo. La biblioteca lleva acabo una sincronización basada en eventos, en la que el Maestro avisa al Esclavo del momento exacto en el que debe ejecutarse la tarea. Este aviso se manda a través de dos canales diferentes: un bus I2C y un pulso a través de un Pin de Entrada/Salida de Propósito General (GPIO). La comunicación es crítica para el proceso de sincronización, de ahí que exista redundancia en los canales.
 
+Puede consultar [**este enlace**](https://alvarillo89.github.io/SyncroARD/docs/memoria) para obtener más información sobre cómo se desarrolló `SyncroARD`.
+
 ---
 
 ## Quickstart
@@ -28,8 +30,8 @@ Sigue estos pasos si quieres utilizar SyncroARD:
    ![](/docs/imgs/Connection.png)
 
    - La conexión a tierra (GND) entre ambas tarjetas es obligatoria.
-   - La conexión entre los pines digitales número 2 son para la comunicación mediante GPIO.
-   - La conexión entre los pines analógicos 4 y 5 son para el bus I2C.
+   - La conexión entre los pines digitales 2 es para la comunicación mediante GPIO.
+   - Las conexiones entre los pines analógicos 4 y 5 son para el bus I2C.
 
 4. Para hacer tu código, parte de las plantillas para el Maestro y el Esclavo presentes en el directorio [**templates/**](https://github.com/alvarillo89/SyncroARD/tree/master/templates).
 
