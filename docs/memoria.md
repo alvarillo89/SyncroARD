@@ -4,10 +4,10 @@ En este documento se describe con detalle los apectos de implementación de `Syn
 
 **Tabla de contenidos:**
 
-- [1 Mecanismos de comunicación](#1-mecanismos-de-comunicacion)
+- [1 Mecanismos de comunicación](#1-mecanismos-de-comunicación)
 - [2 Time Triggering VS Event Triggering](#2-time-triggering-vs-event-triggering)
-- [3 Mecanismos de sincronización](#3-mecanismos-de-sincronizacion)
-  - [3.1 Enfoque 1 (Sincronización de los relojes de ambas tarjetas)](<#3.1-Enfoque-1-(Sincronizacion-de-los-relojes-de-ambas-tarjetas)>)
+- [3 Mecanismos de sincronización](#3-mecanismos-de-sincronización)
+  - [3.1 Enfoque 1 (Sincronización de los relojes de ambas tarjetas)](#3.1-enfoque-1-(sincronización-de-los-relojes-de-ambas-tarjetas))
 
 ## 1 Mecanismos de comunicación
 
