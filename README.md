@@ -25,7 +25,7 @@ Sigue estos pasos si quieres utilizar SyncroARD:
 1. Asegúrate de tener instalada la biblioteca de Arduino _"Arduino FreeRTOS Library"_. Sigue los pasos del punto _Getting Started with FreeRTOS_ del [siguiente enlace](https://feilipu.me/2015/11/24/arduino_freertos/) para instalarla.
 2. Clona o descarga este repositorio y coloca el directorio [**SyncroARD/**](https://github.com/alvarillo89/SyncroARD/tree/master/SyncroARD) bajo la ruta en la que se alojen las bibliotecas de Arduino en tu sistema. En Linux por ejemplo, deberás colocarla bajo el directorio `~/Arduino/libraries/`. Puedes consultar más información sobre como instalar una biblioteca manualmente en el [siguiente enlace](https://www.arduino.cc/en/Guide/Libraries#toc5).
 3. Conecta ambas tarjetas de la siguiente forma:
-   ![](docs/imgs/Connection.png | width=100)
+   ![](docs/imgs/Connection.png)
 
    - La conexión a tierra (GND) entre ambas tarjetas es obligatoria.
    - La conexión entre los pines digitales número 2 son para la comunicación mediante GPIO.
