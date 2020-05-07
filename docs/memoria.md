@@ -7,7 +7,8 @@ En este documento se describe con detalle los apectos de implementación de `Syn
 - [1 Mecanismos de comunicación](#1-mecanismos-de-comunicación)
 - [2 Time Triggering VS Event Triggering](#2-time-triggering-vs-event-triggering)
 - [3 Mecanismos de sincronización](#3-mecanismos-de-sincronización)
-  - [3.1 Enfoque 1 (Sincronización de los relojes de ambas tarjetas)](#3.1-enfoque-1-(sincronización-de-los-relojes-de-ambas-tarjetas))
+  - [3.1 Enfoque 1 (Sincronización de los relojes de ambas tarjetas)](#31-enfoque-1-sincronización-de-los-relojes-de-ambas-tarjetas)
+  - [3.2 Enfoque 2 (EventGroup de FreeRTOS)](#32-enfoque-2-eventgroup-de-freertos)
 
 ## 1 Mecanismos de comunicación
 
@@ -70,11 +71,22 @@ En este primer enfoque, la sincronización funcionaría de la siguiente forma:
 2. Puesto que las frecuencias y los ticks están sincronizados, simplemente la tarea debe comenzar en el mismo tick en ambas tarjetas.
 3. Periódicamemente, se vuelve a comprobar que la frecuencia y los ticks de ambas tarjetas sigan sincronizados. En caso de que no, se vuelven a reasignar.
 
-**Problemas:**
+**Problema:**
 
-- El reloj de FreeRTOS de Arduino es sólo de lectura, no hay forma de modificarlo. Como mucho, se puede consultar el número de ticks de reloj que han pasado desde que se encendió la tarjeta, para cada tarea ([xTaskGetTickCount](https://www.freertos.org/a00021.html#xTaskGetTickCount)). Si no se puede modificar el reloj, esta solución es completamente inviable.
+El reloj de FreeRTOS de Arduino es sólo de lectura, no hay forma de modificarlo. Como mucho, se puede consultar el número de ticks de reloj que han pasado desde que se encendió la tarjeta, para cada tarea ([xTaskGetTickCount](https://www.freertos.org/a00021.html#xTaskGetTickCount)). Si no se puede modificar el reloj, esta solución es completamente inviable.
 
 ### 3.2 Enfoque 2 (EventGroup de FreeRTOS)
+
+Puesto que no se puede modificar el reloj, la siguiente idea que se pensó para intentar sincronizar las tareas, pasa por el uso de mecanismos clásicos de los sistemas concurrentes y distribuidos: semáforos binarios, mutex, barreras, etcétera. Concretamente, FreeRTOS dispone de una biblioteca complementaria que permite sincronizar varias tareas. Se trata de la biblioteca `event_group.h`.
+
+Este complemento proporciona una barrera. En computación paralela, una barrera, para un grupo de hilos o procesos, significa que todos los que implementen esta barrera deberán parar en ese punto sin poder ejecutar las siguientes líneas de código hasta que todos los restantes hilos/procesos hayan alcanzado esta barrera. `Event_group.h` proporciona el método [xEventGroupSync](https://www.freertos.org/xEventGroupSync.html), una barrera para las tareas de FreeRTOS.
+
+La idea de la sincronización para este enfoque es la siguiente: antes de la ejecución de la tarea en el bucle principal, se coloca la barrera `xEventGroupSync`. De esta forma, las tarjetas deberán esperarse la una a la otra hasta que ambas se encuentren al principio de la tarea. Si esto se hace en cada iteración del bucle principal, las tareas se ejecutarán a la par.
+
+**Problema:**
+
+Para funcionar, `xEventGroupSync` necesita de una estructura de datos global en la que almacenar la información de la barrera (`EventGroupHandle_t`). Dicha estrutura debería ser compartida por ambas tarjetas. Sin embargo, Arduino no dispone de ningún mecanismo de memoria compartida (_Shared Memory_).
+
 
 ### 3.3 Enfoque 3 (Comienzo simultáneo y sincronización periódica)
 
@@ -92,3 +104,4 @@ En este primer enfoque, la sincronización funcionaría de la siguiente forma:
 - [El bus SPI en Arduino](https://www.luisllamas.es/arduino-spi/)
 - [El bus I2C en Arduino](https://www.luisllamas.es/arduino-i2c/)
 - [Event-Triggered versus Time-Triggered Systems](https://www.e-reading-lib.com/chapter-amp.php/143358/161/andrew-tanenbaum-distributed-operating-systems.html)
+- [Barrier (computer science)](https://en.wikipedia.org/wiki/Barrier_(computer_science))
