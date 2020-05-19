@@ -4,7 +4,9 @@ En este documento encontrará información acerca de por qué se decidió utiliz
 
 ## 1. Microkernels
 
-Para que la biblioteca funcione apropiadamente, debe tener por debajo una capa que proporcione utilidades de tiempo real. Puesto que los dispositivos con los que se trabajará serán empotrados y no realizarán más de una o dos tareas, tenemos suficiente con un microkernel.
+Para que la biblioteca funcione apropiadamente, debe tener por debajo una capa que proporcione utilidades de tiempo real. Las tareas deben ejecutarse en el momento que determine el protocolo de sincronización, ni antes ni después. Están sometidas a restricciones de tiempo. 
+
+Puesto que los dispositivos con los que se trabajará serán empotrados y no realizarán más de una o dos tareas, tenemos suficiente con un microkernel.
 
 > Un microkernel, es un tipo de kernel de un sistema operativo que provee un conjunto de primitivas o llamadas mínimas al sistema para implementar servicios básicos como espacios de direcciones, comunicación entre procesos y planificación básica.
 
