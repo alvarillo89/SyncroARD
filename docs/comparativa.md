@@ -194,7 +194,7 @@ Del estudio anterior, pueden extraerse los siguientes puntos:
     - Con respecto al inconveniente de la memoria, se han realizado pruebas para comprobar cuánto espacio consume FreeRTOS de los 32KB disponibles. El microkernel solo consume un 20% del espacio, quedando libre un 80% para el resto de código necesario.
     - Utilizando el bus [I2C](https://www.luisllamas.es/arduino-i2c/) resulta sencillo conectar dos tarjetas Arduino y compartir información entre ambas.
 
-En definitiva, para el desarrollo de este proyecto, se utilizará como dispositivo la placa `Arduino Uno R3`. En el directorio [prior_tests/](https://github.com/alvarillo89/SyncroARD/tree/master/prior_tests) puede consultar todos los sketches de Arduino empleados para verificar la viabilidad de esta decisión. 
+En definitiva, para el desarrollo de este proyecto, se utilizará como dispositivo la placa `Arduino Uno R3`. En el directorio [**prior_tests/**](https://github.com/alvarillo89/SyncroARD/tree/master/prior_tests) puede consultar todos los sketches de Arduino empleados para verificar la viabilidad de esta decisión. 
 
 ---
 ## 3. Referencias
