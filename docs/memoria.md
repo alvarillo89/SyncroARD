@@ -5,6 +5,7 @@ En este documento se describe con detalle los apectos de implementación de `Syn
 **Tabla de contenidos:**
 
 - [1 Motivación](#1-motivación)
+  - [1.1 Objetivos del proyecto](#11-objetivos-del-proyecto)
 - [2 Mecanismos de comunicación](#2-mecanismos-de-comunicación)
 - [3 Time Triggering VS Event Triggering](#3-time-triggering-vs-event-triggering)
 - [4 Mecanismos de sincronización](#4-mecanismos-de-sincronización)
@@ -19,7 +20,7 @@ En este documento se describe con detalle los apectos de implementación de `Syn
 
 ## 1 Motivación
 
-Un sistema distribuido es un conjunto de computadores conectados entre sí a través de una red de comunicación, en el que los distintos componentes software y hardware se comunican y coordinan exclusivamente mediante paso de mensajes. En este tipo de escenarios (en los que no existe una fuente temporal común a todos los nodos), la sincronización se vuelve fundamental por diversos motivos:
+Un sistema distribuido es un conjunto de computadores conectados entre sí a través de una red de comunicación, en el que los distintos componentes software y hardware se comunican y coordinan exclusivamente mediante paso de mensajes. En este tipo de escenarios (en los que no existe una fuente temporal común a todos los nodos) la sincronización se vuelve fundamental por diversos motivos:
 
 1. Cada nodo puede compartir sus recursos con otros nodos. La sincronización ayuda a resolver conflictos en la asignación de recursos.
 1. Todos los computadores comparten sus propios datos. Para poder acceder a los datos actualizados de cada computador, el _time stamp_ de todos los nodos debe ser el mismo.
@@ -28,6 +29,13 @@ Un sistema distribuido es un conjunto de computadores conectados entre sí a tra
 Este proyecto se centra en dar una solución cómoda y efectiva para el último caso de uso de la sincronización: **ejecutar tareas al mismo tiempo en un sistema distribuido**. Esta restricción es bastante frecuente en campos como la robótica, donde puede requerirse que dos o más actuadores efectúen un mismo movimiento al unísono. 
 
 Además, en la robótica, también es muy frecuente el uso de tarjetas de Arduino. No existe una biblioteca, ni mecanismos sencillos, para llevar a cabo este tipo de sincronización en esta plataforma. Es en este contexto donde nace **SyncroARD**.
+
+### 1.1 Objetivos del proyecto
+
+1. Desarrollar una biblioteca de Arduino que permita sincronizar una tarea en dos tarjetas.
+1. La biblioteca desarrollada debe ser robusta y lo más determinista posible.
+2. La bibloteca desarrollada debe seguir la filosofia de Arduino: _Keep it simple_.
+3. Documentar y ejemplificar exahustivamente su uso.
 
 ## 2 Mecanismos de comunicación
 
@@ -150,13 +158,23 @@ A continuación se listan algunas ideas que pueden contribuir a mejorar la bibli
 
 ## 7 Conclusión
 
+Este proyecto toca dos contextos que pueden relacionarse fácilmente con el campo de los Sistemas Críticos:
+
+- Sistemas Distribuidos: se han mencionado reiteradamente a lo largo de este documento. Hay que dejar claro que no todos los Sistemas Críticos son distribuidos ni viceversa. Más bien se produce un punto de intersección de ambas disciplinas que da lugar a una subclase dentro de la taxonomía de los Sistemas Críticos, los conocidos como **Distributed Safety-Critical Systems (DSCS)**. Los DSCS están formados por un cojunto de nodos que se comunican entre ellos y que coordinan sus acciones con cierto determinismo (las acciones siempre producen la misma salida o el mismo estado final en el sistema a partir de un determinado estado inicial). Normalmente, la ejecución de esas acciones es crítica (su fallo puede acarrear consecuencias severas) y dependen de que el intercambio de mensajes entre los nodos se efectue sin incidencias. Dicho de otra froma, los protocolos de comunicación entre participantes son los que requieren de una confiabilidad (_reliability_) alta. `SyncroARD` depende íntegramente de la comunicación para la sincronización. Es un proceso crítico y, por este motivo, se le añadió [redundancia](#5-redundancia-en-la-comunicación).
+- Sistemas de Tiempo Real (RTS): se trata de sistemas cuya respuesta debe garantizarse dentro de una restricción temporal determinada, o cumpliendo un plazo (_deadline_) previamente especificado. En función de las restricciones de tiempo, los RTS pueden clasificarse en dos grupos:
+  - Sistemas de Tiempo Real Suaves (_Soft Real Time Systems_): este tipo de sistemas pueden incumplir su _deadline_ ocasionalmente con una probabilidad aceptablemente baja. El incumplimiento del plazo no tiene consecuencias desastrosas. La calidad del servicio (_QoS_) producido por un Sistema de Tiempo Real Suave disminuye gradualmente con el aumento de la tardanza. La tardanza significa cuán tarde un sistema de tiempo real completa su tarea con respecto a su _deadline_.
+  - Sistemas de Tiempo Real Duros (_Hard Real Time Systems_): este tipo de sistemas nunca pueden incumplir su _deadline_. El incumplimiento del plazo puede tener consecuencias desastrosas. La calidad del servicio producido por un Sistema de Tiempo Real Duro disminuye abruptamente y puede llegar a ser extremadamente negativa si aumenta la tardanza. En definitiva, los Sistemas de Tiempo real Duro son un tipo de Sistemas Críticos. 
+- `SyncroARD` utiliza `FreeRTOS` para garantizar que las tareas se ejecutan en el momento que indique el procolo de sincronización (_deadline_). Dependiendo de la criticidad de las tareas que se sincronicen, será un RTS Suave o Duro. 
+
 ## Referencias
 
-- https://www.geeksforgeeks.org/synchronization-in-distributed-systems/
-- https://link.springer.com/chapter/10.1007/978-3-642-31513-8_43
-- https://www.cignex.com/blog/importance-time-synchronization-distributed-system
+- [Geeks for geeks - Synchronization in Distributed Systems](https://www.geeksforgeeks.org/synchronization-in-distributed-systems/)
+- [Amritha Sampath, C. Tripti - Synchronization in Distributed Systems](https://link.springer.com/chapter/10.1007/978-3-642-31513-8_43)
+- [Importance of Time Synchronization in Distributed System](https://www.cignex.com/blog/importance-time-synchronization-distributed-system)
 - [Comunicación de Arduino con puerto serie](https://www.luisllamas.es/arduino-puerto-serie/)
 - [El bus SPI en Arduino](https://www.luisllamas.es/arduino-spi/)
 - [El bus I2C en Arduino](https://www.luisllamas.es/arduino-i2c/)
 - [Event-Triggered versus Time-Triggered Systems](https://www.e-reading-lib.com/chapter-amp.php/143358/161/andrew-tanenbaum-distributed-operating-systems.html)
 - [Barrier (computer science)](https://en.wikipedia.org/wiki/Barrier_(computer_science))
+- [Geeks for geeks - Real Time Systems](https://www.geeksforgeeks.org/real-time-systems/)
+- [Deterministic System](https://en.wikipedia.org/wiki/Deterministic_system)
